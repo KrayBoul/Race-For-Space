@@ -1,0 +1,125 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    box-sizing: border-box;
+  }
+
+html {
+	display: block;
+	background-color:#000000;
+	font-family: sans-serif;
+}
+
+.banner {
+	display: flex;
+    align-items: flex-start;
+    width: 80%;
+    margin:auto;
+}
+.container {
+    display: flex;
+    align-items: flex-start;
+	width: 80%;
+    margin:auto;
+    align-content: space-between;
+	font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+	font-size: 12pt;
+}
+
+.gamepanel {
+    width: 80%;
+    display: block;
+}
+
+canvas {
+
+    background-color: #00153d;
+    position: absolute;
+    z-index: 1;
+    width: 55%;
+    height: auto;
+    margin-left: 4%;
+    margin-right: 41%;
+    margin-top: 6%;
+    border-radius: 1rem;
+}
+
+.navigation {
+    display:flex;
+    flex-direction: column;
+    align-items:space-between;
+    margin-left: 2%;
+    width: 18%;
+    
+}
+
+.menu {
+    justify-content: flex start;
+    width: 100%;
+}
+
+h1 {
+    width: 100%;
+    font-size: 20px;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+}
+
+h2 {
+    width: 100%;
+    font-size: 30px;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    outline: 6px groove #00FF01;
+    border-radius: 2rem;
+    background-color:#2550a1;
+}
+
+
+
+.frame {
+	margin-top: 20px;
+    width: 100%;
+    height: auto;
+    outline: 6px groove #00FF01;
+    border-radius: 2rem;
+}
+
+button {
+    background-color: #00FF01; /* Green */
+    border: none;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    padding: 15px 15px;
+    font-size: 20px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 2px 3px rgb(0, 65, 16);
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+    font-weight: bold;
+}
+
+  button:hover {background-color: #003f13
+}
+
+  button:active {
+    background-color: #fd0a0a;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+.baseline {
+    display: flex;
+    align-items: flex-start;
+	width: 80%;
+    margin:auto;
+    align-content: space-between;
+}
