@@ -1,0 +1,89 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    box-sizing: border-box;
+  }
+
+html {
+	background-color:#000000;
+}
+
+.banner {
+	display: flex;
+    align-items: flex-start;
+    width: 70%;
+    margin:auto;
+}
+
+.container {
+    display: flex;
+	width: 70%;
+    margin:auto;
+    margin-top: 20px;;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    border: 6px groove #00FF01;
+    border-radius: 2rem;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    margin: auto;
+}
+
+.allbutton {
+    justify-content: space-around;
+    margin-bottom: 10px;
+
+}
+
+button {
+    background-color: #00FF01; /* Green */
+    border: none;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    padding: 45px 10px;
+    font-size: 20px;;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    box-shadow: 2px 3px rgb(0, 65, 16);
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+    font-weight: bold;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+button:hover {background-color: #003f13
+}
+
+button:active {
+    background-color: #fd0a0a;
+    box-shadow: 3px 1px rgb(167, 167, 167);
+    transform: translateY(4px);
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    border: 6px groove #00FF01;
+    border-radius: 2rem;
+    background-color:#2550a1;
+    margin-left: 10px;
+}
+
+h2 {
+    font-size: 100%;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+}
