@@ -8,19 +8,19 @@
         <link rel="stylesheet" href="Style.css"/>
           
     </head>
-    <body onload="startGame()">
+    <body onload="startScreen()">
     
         <img class="banner" src="Bilder/banner.png"/>
     
         <div class="container">
 
             <div class="game">
-                <canvas id="canvas"></canvas>
+                <canvas id="canvas" width="320" height="200"></canvas>
             </div>
 
 
             <div class="button-start">
-                <button type="submit">Start</button>
+                <button onClick="startGame()">Start</button>
                 <button onClick="togglePlay()">Music</button>
             </div>
             <div class="button-music">
@@ -37,7 +37,7 @@
         
         <audio id="audio" src="Sounds/websiteaudio.mp3" preload="auto"></audio>
 
-        <script src="script.js"></script>    
+        <script src="script.js" defer></script>
     </body>
     
 </html>

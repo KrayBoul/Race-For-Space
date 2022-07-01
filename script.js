@@ -1,48 +1,62 @@
 
+const game = {
+    resolution: { w:320, h:200 },
+    objects: [],
+    player: null,
+    background: null,
+    assets: {
+        background: {
+            x: 0,
+            y: -200,
+            width: 320,
+            height: 400,
+            dir: 'v',
+            speed: 2,
+            src:'Bilder/background_320x400.png'
+        },
+        spaceship: {
+            x: 135,
+            y: 100,
+            width: 35,
+            height: 35,
+            dir: 'vh',
+            speed: 3,
+            src:'Bilder/spaceship.png'
+        },
+        warship1: {
+            x: -90,
+            y: -300,
+            width: 150,
+            height: 400,
+            dir: 'v',
+            speed: 0.5,
+            src:'Bilder/warship1.png'
+        },
+        warship2: {
+            x: 240,
+            y: -300,
+            width: 150,
+            height: 400,
+            dir: 'v',
+            speed: 0.3,
+            src:'Bilder/warship2.png'
+        }
+    }
+}
+
 // Key definition
 let UP = false; // 38
 let LEFT = false; // 37
 let DOWN = false; // 40
 let RIGHT = false; // 39
-let canvas;
-let ctx;
+
+const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext('2d');
+ctx.canvas.width  = game.resolution.w;
+ctx.canvas.height = game.resolution.h;
 
 //Music
 let audio = document.getElementById("audio");
-
-
-
-let background = {
-    x: 0,
-    y: -350,
-    width: 500,
-    height: 500,
-    src:'Bilder/background.jpg'
-}
-
-let spaceship = {
-    x: 135,
-    y: 100,
-    width: 35,
-    height: 35,
-    src:'Bilder/spaceship.png'
-}
-
-let warship1 = {
-    x: -90,
-    y: -300,
-    width: 150,
-    height: 400,
-    src:'Bilder/warship1.png'
-}
-
-let warship2 = {
-    x: 240,
-    y: -300,
-    width: 150,
-    height: 400,
-    src:'Bilder/warship2.png'
-}
 
 // Keys pressed
 window.onkeydown = function(e) {
@@ -76,35 +90,85 @@ window.onkeyup = function(e) {
     }
 }
 
+function startScreen() {
+    const startScreen = new Image();
+    startScreen.src = 'Bilder/background_320x400.png';
+
+    ctx.drawImage(startScreen, 0, 0, game.resolution.w, 400);
+}
+
 function startGame() {
-    canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
+    
+    game.background = game.assets.background;
+    
+    game.objects.push(game.assets.warship1);
+    game.objects.push(game.assets.warship2);
+
+    game.player = game.assets.spaceship;
+    
     loadImages();
-    setInterval(update, 1000 / 25);
+
+
     draw();
 }
 
 function update() {
     if (LEFT) {
-        spaceship.x -= 3;
+        game.player.x = Math.max(0, game.player.x-game.player.speed);
     }
 
     if (RIGHT) {
-        spaceship.x += 3;
+        game.player.x = Math.min(game.resolution.w-game.player.width, game.player.x+game.player.speed);
     }
+
     if (UP) {
-        warship1.y += 0.5;
-        warship2.y += 0.5;
-        background.y += 2;
+        game.player.y = Math.max(0, game.player.y-game.player.speed);
     }
 
     if (DOWN) {
-        warship1.y -= 0.5;
-        warship2.y -= 0.5;
-        background.y -= 0.5;
+        game.player.y = Math.min(game.resolution.h-game.player.height, game.player.y+game.player.speed);
     }
-}
 
+    // draw background
+    game.background.y += game.background.speed;
+    if (game.background.y > 0) {
+        game.background.y = game.background.height/2*-1; // todo: werte anpassen, dass loop gut aussieht
+        console.log('looped background image');
+    }
+    ctx.drawImage(game.background.img, game.background.x, game.background.y, game.background.width, game.background.height);
+
+    // draw objects
+    for (let i=0; i<game.objects.length; i++) {
+        if (game.objects[i].dir == 'v') {
+            game.objects[i].y += game.objects[i].speed;
+        }
+        if (game.objects[i].dir == 'h') {
+            game.objects[i].x += game.objects[i].speed;
+        }
+
+        // check for out of bounds
+        // todo: better intersection detection
+        if (game.objects[i].y > game.resolution.h || game.objects[i].y < -400) {
+            console.log('oub vertical', game.objects[i].src);
+            game.objects.splice(i, 1);
+        } else if (game.objects[i].x > game.resolution.w || game.objects[i].x < -100) {
+            console.log('oub horizontal', game.objects[i].src);
+            game.objects.splice(i, 1);
+        } else {
+            // draw
+            ctx.drawImage(game.objects[i].img, game.objects[i].x, game.objects[i].y, game.objects[i].width, game.objects[i].height);
+        }
+    }
+
+    // draw player
+    ctx.drawImage(game.player.img, game.player.x, game.player.y, game.player.width, game.player.height);
+    
+    /*
+    ctx.drawImage(warship1.img, warship1.x, warship1.y, warship1.width, warship1.height);
+    ctx.drawImage(warship2.img, warship2.x, warship2.y, warship2.width, warship2.height);
+    ctx.drawImage(spaceship.img, spaceship.x, spaceship.y, spaceship.width,  spaceship.height);
+    */
+}
 
 //Sound and Audio
 let isPlaying = false;
@@ -123,30 +187,17 @@ audio.onpause = function() {
     isPlaying = false;
 }
 
-startBtn.onClick = function() {
-	playSound.play();
-}
-
-restartBtn.onClick = function() {
-	playSound.play();
-}
-
 function loadImages () {
-    background.img = new Image();
-    background.img.src = background.src;
-    spaceship.img = new Image();
-    spaceship.img.src = spaceship.src;
-    warship1.img = new Image();
-    warship1.img.src = warship1.src;
-    warship2.img = new Image();
-    warship2.img.src = warship2.src;
+    console.log(game.assets);
+
+    Object.entries(game.assets).forEach(function ([key, value]) {
+        game.assets[key].img = new Image();
+        game.assets[key].img.src = game.assets[key].src;
+        console.log('loaded', game.assets[key].src);
+    });
 }
 
 function draw() {
-    ctx.drawImage(background.img, background.x, background.y, background.width, background.height);
-    ctx.drawImage(warship1.img, warship1.x, warship1.y, warship1.width, warship1.height);
-    ctx.drawImage(warship2.img, warship2.x, warship2.y, warship2.width, warship2.height);
-    ctx.drawImage(spaceship.img, spaceship.x, spaceship.y, spaceship.width,  spaceship.height);
-    
-    requestAnimationFrame(draw)
+    update();
+    requestAnimationFrame(draw);
 }
