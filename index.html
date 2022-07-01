@@ -9,39 +9,35 @@
           
     </head>
     <body onload="startGame()">
-        
-        <img class="banner" src="Bilder/banner.png" />
-
+    
+        <img class="banner" src="Bilder/banner.png"/>
+    
         <div class="container">
-            <div class="gamepanel">
-                <canvas id="canvas"></canvas>
-                <img class="frame" src="Bilder/frame.png" />
-            </div>
-            
-            <div class="navigation">
-                <div class="menu">
-                    <h1><a href="index.html"  ><button type="submit">New Game</button></a></h3>
-                    <h1><a href="index.html"  ><button type="submit">Rules</button></a></h3>
-                    <h1><a href="index.html"  ><button type="submit">About</button></a></h3>
-                </div>
 
+            <canvas id="canvas"></canvas>
+
+            <div class="navigatiom">
+                <div class="allbutton">
+                    <button type="submit">Start</button>
+                    <button onClick="togglePlay()">Music</button>
+                </div>
                 <div class="score">
                     <h2>Score</p>
                     <h2>10000</p> 
-                </div>
-            </div>
+                </div>    
+            </div> 
              
         </div>
 
-        <div class="baseline">
-            <embed src="Sounds/websiteaudio.mp3" loop="true" autostart="true" >
-            </embed>
-    
-            <img class="wasd" src="Bilder/wasd.gif" />
-        </div>
+        
+        <audio id="audio" src="Sounds/websiteaudio.mp3" preload="auto"></audio>
+
         <script src="script.js"></script>    
     </body>
     
     </html>
 
 
+    
+
+    
