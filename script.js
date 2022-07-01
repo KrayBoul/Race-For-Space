@@ -5,6 +5,7 @@ const game = {
     player: null,
     background: null,
     assets: {
+        
         background: {
             x: 0,
             y: -200,
@@ -13,6 +14,36 @@ const game = {
             dir: 'v',
             speed: 2,
             src:'Bilder/background_320x400.png'
+        },
+        ship: class {
+            x=0;
+            y=0;
+            width;
+            height;
+            img;
+            src;
+            dir='v';
+            speed=0;
+
+            constructor (params) {
+                this.height = params?.height;
+                this.width = params?.width;
+                this.x = params?.x;
+                this.y = params?.y;
+                this.dir = params?.dir;
+                this.speed = params?.speed;
+                this.src = params?.src;
+
+                console.log('created ship', this);
+            }
+
+            load () {
+                if (this.src) {
+                    this.img = new Image();
+                    this.img.src = this.src;
+                    console.log('init', this.img);
+                }
+            }
         },
         spaceship: {
             x: 135,
@@ -41,6 +72,47 @@ const game = {
             speed: 0.3,
             src:'Bilder/warship2.png'
         }
+    }
+}
+
+game.assets.playerShip = class extends game.assets.ship {
+    constructor (params) {
+        super(params);
+
+        this.x = 135;
+        this.y = 100;
+        this.width = 35;
+        this.height = 35;
+        this.dir = 'vh';
+        this.speed = 3;
+        this.src = 'Bilder/spaceship.png';
+        //this.img = new Image();
+        //this.img.src = this.src;
+        super.load();
+        console.log('created player ship');
+    }
+
+    move (direction, amount) {
+        if (!direction || !amount) return;
+
+        this[direction] = this[direction] + amount;
+    }
+}
+
+game.assets.warShip = class extends game.assets.ship {
+    constructor(params) {
+        super(params);
+
+        this.x = params?.x;
+        this.y = params?.y;
+        this.dir = params?.dir || 'v';
+        this.speed = params?.speed || 1;
+
+        this.width = 150;
+        this.height = 400;
+        this.src ='Bilder/warship1.png';
+
+        console.log('created warship', this);
     }
 }
 
@@ -99,16 +171,43 @@ function startScreen() {
 
 function startGame() {
     
-    game.background = game.assets.background;
+    game.background = new game.assets.ship({
+        x: 0,
+        y: 0,
+        width: 320,
+        height: 400,
+        src: 'Bilder/background_320x400.png',
+        speed: 1,
+        dir: 'v'
+    });
     
-    game.objects.push(game.assets.warship1);
-    game.objects.push(game.assets.warship2);
+    game.objects.push(new game.assets.warShip({
+        x: -30,
+        y: -100,
+        speed: 0.5
+    }));
 
-    game.player = game.assets.spaceship;
-    
+    game.player = new game.assets.playerShip({
+        width: 128,
+        height: 256
+    });
+
     loadImages();
 
+    // setInterval(update, 1000 / 25);
+    
+    setTimeout(function () {
+        const newShip = new game.assets.warShip({
+            x: 120,
+            y: -200,
+            speed: 0.75
+        });
+        newShip.load();
 
+        game.objects.push(newShip);
+        console.log('new ship', newShip);
+    }, 3000);
+    
     draw();
 }
 
@@ -162,12 +261,6 @@ function update() {
 
     // draw player
     ctx.drawImage(game.player.img, game.player.x, game.player.y, game.player.width, game.player.height);
-    
-    /*
-    ctx.drawImage(warship1.img, warship1.x, warship1.y, warship1.width, warship1.height);
-    ctx.drawImage(warship2.img, warship2.x, warship2.y, warship2.width, warship2.height);
-    ctx.drawImage(spaceship.img, spaceship.x, spaceship.y, spaceship.width,  spaceship.height);
-    */
 }
 
 //Sound and Audio
@@ -188,13 +281,14 @@ audio.onpause = function() {
 }
 
 function loadImages () {
-    console.log(game.assets);
 
-    Object.entries(game.assets).forEach(function ([key, value]) {
-        game.assets[key].img = new Image();
-        game.assets[key].img.src = game.assets[key].src;
-        console.log('loaded', game.assets[key].src);
+    Object.entries(game.objects).forEach(function ([key, value]) {
+        game.objects[key].load();
+        console.log('loaded', game.objects[key].src);
     });
+
+    // game.playerShip.load();
+    game.background.load();
 }
 
 function draw() {
