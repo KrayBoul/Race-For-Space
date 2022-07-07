@@ -59,7 +59,7 @@ canvas {
 }
 
 button {
-    background-color: #00FF01; /* Green */
+    background-color: #00FF01; /*  evtll. button image background-image: url("./Bilder/start.png"); */
     border: none;
     color: rgb(0, 0, 0);
     text-align: center;
@@ -71,7 +71,7 @@ button {
     
     cursor: pointer;
     box-shadow: 2px 3px rgb(0, 65, 16);
-    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif"; /*später gerne "Press Start 2P" font; https://fonts.google.com/specimen/Press+Start+2P*/
     font-weight: bold;
 }
 
@@ -95,6 +95,13 @@ button:active {
 }
 
 h2 {
-    font-size: 100%;
-    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";
+    font-size: 20px;
+    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";   /*später gerne "Press Start 2P" font; https://fonts.google.com/specimen/Press+Start+2P*/
+}
+
+.lives {
+	display: flex;
+    align-items: flex-start;
+    width: min(100%, 960px);
+    margin:auto;
 }
