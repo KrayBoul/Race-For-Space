@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* CSS Document */
 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 * {
     box-sizing: border-box;
   }
@@ -71,7 +73,7 @@ button {
     
     cursor: pointer;
     box-shadow: 2px 3px rgb(0, 65, 16);
-    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif"; /*später gerne "Press Start 2P" font; https://fonts.google.com/specimen/Press+Start+2P*/
+    font-family: 'Press Start 2P', "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, sans-serif;
     font-weight: bold;
 }
 
@@ -96,7 +98,7 @@ button:active {
 
 h2 {
     font-size: 20px;
-    font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, "sans-serif";   /*später gerne "Press Start 2P" font; https://fonts.google.com/specimen/Press+Start+2P*/
+    font-family: 'Press Start 2P', "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, sans-serif;
 }
 
 .lives {
