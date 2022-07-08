@@ -35,6 +35,7 @@ const game = {
 			width;
 			height;
 			img;
+			multiimg;
 			src;
 			dir='v';
 			speed = 0;
@@ -49,15 +50,27 @@ const game = {
 				this.dir = params?.dir;
 				this.speed = params?.speed;
 				this.src = params?.src;
+				this.img = {};
 				this.type = params?.type;
+				this.multisrc = params?.multisrc;
 
 				// console.log('created ship', this);
 			}
 
 			load () {
-				if (this.src) {
-					this.img = new Image();
-					this.img.src = this.src;
+				if(this.src && typeof this.src === 'object') {
+					for (let [key, value] of Object.entries(this.src)) {
+						// console.log('obj provided', key, value);
+						this.img[key] = new Image();
+						this.img[key].src = value;
+					}
+					if (!this.img.current) {
+						this.img.current = this.img.default;
+					}
+				} else if (this.src) {
+					this.img.default = new Image();
+					this.img.default.src = this.src;
+					this.img.current = this.img.default;
 				}
 			}
 		},
@@ -82,16 +95,30 @@ const game = {
 				this.dir = params?.dir;
 				this.speed = params?.speed;
 				this.src = params?.src;
+				this.img = {};
 				this.active = params?.active;
 				this.type = params?.type || 'laser';
 
 				game.counter.lasers += 1;
+
+				this.load();
+				this.img.current = this.img.default;
 			}
 
 			load () {
-				if (this.src) {
-					this.img = new Image();
-					this.img.src = this.src;
+				if(this.src && typeof this.src === 'object') {
+					for (let [key, value] of Object.entries(this.src)) {
+						// console.log('obj provided', key, value);
+						this.img[key] = new Image();
+						this.img[key].src = value;
+					}
+					if (!this.img.current) {
+						this.img.current = this.img.default;
+					}
+				} else if (this.src) {
+					this.img.default = new Image();
+					this.img.default.src = this.src;
+					this.img.current = this.img.default;
 				}
 			}
 		},
@@ -116,11 +143,19 @@ game.assets.playerShip = class extends game.assets.ship {
 		this.height = 25;
 		this.dir = 'vh';
 		this.speed = 2;
-		this.src = './Bilder/spaceship.png';
+		this.downSpeed = 1;
+		this.src = {
+			'default': './Bilder/spaceship-idle.png',
+			'moveUp': './Bilder/spaceship.png',
+			'moveLeft': './Bilder/spaceship-left.png',
+			'moveDown': './Bilder/spaceship-idle.png',
+			'moveRight': './Bilder/spaceship-right.png',
+		};
 		this.type = 'player';
 
 		super.load();
-		console.log('created player ship');
+		this.img.current = this.img.default;
+		console.log('created player ship', this);
 	}
 
 	move (direction, amount) {
@@ -148,6 +183,7 @@ game.assets.warship = class extends game.assets.ship {
 		this.firing = params?.firing || true;
 
 		console.log('created warship', this);
+		super.load();
 		game.counter.warships += 1;
 
 		this.fireInterval = setInterval(function (self) {
@@ -379,7 +415,10 @@ function startGame () {
 		y: 0,
 		width: 320,
 		height: 400,
-		src: './Bilder/background_320x400.png',
+		src: {
+			'default': './Bilder/background_320x400.png',
+			'current': './Bilder/background_320x400.png'
+		},
 		speed: 0.5,
 		dir: 'v'
 	});
@@ -458,20 +497,26 @@ function update () {
 	}
 
 	if (game.player) {
+		game.player.img.current = game.player.img['default'];
+
 		if (LEFT) {
 			game.player.x = Math.max(0, game.player.x-game.player.speed);
+			game.player.img.current = game.player.img['moveLeft'];
 		}
 
 		if (RIGHT) {
 			game.player.x = Math.min(game.resolution.w-game.player.width, game.player.x+game.player.speed);
+			game.player.img.current = game.player.img['moveRight'];
 		}
 
 		if (UP) {
 			game.player.y = Math.max(0, game.player.y-game.player.speed);
+			game.player.img.current = game.player.img['moveUp'];
 		}
 
 		if (DOWN) {
-			game.player.y = Math.min(game.resolution.h-game.player.height, game.player.y+game.player.speed);
+			game.player.y = Math.min(game.resolution.h-game.player.height, game.player.y+game.player.downSpeed);
+			game.player.img.current = game.player.img['moveDown'];
 		}
 	}
 	// DRAW
@@ -482,7 +527,7 @@ function update () {
 		game.background.y = game.background.height/2*-1; // todo: werte anpassen, dass loop gut aussieht
 		// console.log('looped background image');
 	}
-	ctx.drawImage(game.background.img, game.background.x, game.background.y, game.background.width, game.background.height);
+	ctx.drawImage(game.background.img.current, game.background.x, game.background.y, game.background.width, game.background.height);
 
 	// draw objects
 	for (let i=0; i<game.objects.length; i++) {
@@ -523,14 +568,13 @@ function update () {
 			if (!game.objects[i].active) {
 				// inactive objects, eg effects?
 			}
-			
-			ctx.drawImage(game.objects[i].img, game.objects[i].x, game.objects[i].y, game.objects[i].width, game.objects[i].height);
+			ctx.drawImage(game.objects[i].img.current, game.objects[i].x, game.objects[i].y, game.objects[i].width, game.objects[i].height);
 		}
 	}
 
 	// draw player
 	if (game.player) {
-		ctx.drawImage(game.player.img, game.player.x, game.player.y, game.player.width, game.player.height);
+		ctx.drawImage(game.player.img.current, game.player.x, game.player.y, game.player.width, game.player.height);
 	}
 
 	numrounds++;
