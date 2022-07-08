@@ -21,6 +21,11 @@ let numrounds = 0;
 const game = {
 	resolution: { w:320, h:200 },
 	objects: [],
+	counter: {
+		'warships': 0,
+		'jets': 0,
+		'lasers': 0
+	},
 	player: null,
 	background: null,
 	assets: {
@@ -46,7 +51,7 @@ const game = {
 				this.src = params?.src;
 				this.type = params?.type;
 
-				console.log('created ship', this);
+				// console.log('created ship', this);
 			}
 
 			load () {
@@ -79,6 +84,8 @@ const game = {
 				this.src = params?.src;
 				this.active = params?.active;
 				this.type = params?.type || 'laser';
+
+				game.counter.lasers += 1;
 			}
 
 			load () {
@@ -136,8 +143,65 @@ game.assets.warship = class extends game.assets.ship {
 		this.height = 400;
 		this.src = params?.src;
 		this.type = 'warship';
+		this.fireFrequency = params?.speed || 0.5;
+		this.fireInterval = null;
+		this.firing = params?.firing || true;
 
 		console.log('created warship', this);
+		game.counter.warships += 1;
+
+		this.fireInterval = setInterval(function (self) {
+			if (self.firing) {
+				setTimeout(function () {
+					self.shoot();
+				}, rand(0,300));
+			}
+		}, this.fireFrequency*1000, this);
+	}
+
+	destroy () {
+		clearInterval(this.fireInterval);
+		this.firing = false;
+		game.counter.warships -= 1;
+		console.log('destroyed warship');
+	}
+
+	intersection (obj) {
+		if (!obj) return false;
+
+		const intersection = {
+			'left': Math.max(this.x,obj.x),
+			'top': Math.max(this.y,obj.y),
+			'right': Math.min(this.x+this.width,obj.x+obj.width),
+			'bottom': Math.min(this.y+this.height,obj.y+obj.height)
+		};
+
+		// todo: does this even work?
+		intersection.height = Math.abs(intersection.top - intersection.bottom);
+		intersection.width = Math.abs(intersection.bottom - intersection.left);
+
+		return intersection;
+	}
+
+	shoot () {
+		const intersection = this.intersection(game.assets.screen);
+		// console.log('i/s', this.intersection(game.assets.screen));
+
+		const bullet = new game.assets.laser({
+			x: (this.x > game.assets.screen.width/2) ? this.x : this.x+this.width,
+			// y: Math.floor(Math.random() * (this.y+this.height - this.y + 1) + this.y),
+			y: Math.floor(Math.random() * (intersection.top - intersection.bottom + 1) + intersection.bottom),
+			width: 10,
+			height: 3,
+			speed: (this.x > game.assets.screen.width/2) ? -1.5 : 1.5,
+			dir: 'h',
+			src: './Bilder/laser.png',
+			active: true
+		});
+		// console.log('warship shot', bullet.speed);
+		game.objects.push(bullet);
+		bullet.load();
+		playSound('laser');
 	}
 }
 
@@ -163,7 +227,7 @@ game.assets.effect = class extends game.assets.ship {
 		console.log('created effect', this);
 
 		setTimeout(function (self) {
-			console.log('end effect', self);
+			// console.log('end effect', self);
 			self.alive = false;
 		}, this.lifetime*1000, this);
 	}
@@ -250,12 +314,22 @@ function startButtonPress () {
 };
 
 function stopGame () {
+	console.log('game ended');
 	isplaying = false;
 
 	playButton.textContent = "Start";
+	
 	// Pause audio
 	audio.pause();
-	// Dereference objects
+
+	// Dereference objects to stop audio
+	for (var i = 0; i < game.objects.length; i++) {
+		if(game.objects[i].destroy) {
+			game.objects[i].destroy();
+		}
+
+		delete game.objects[i];
+	}
 	game.objects = [];
 	game.background = null;
 	game.player = null;
@@ -263,6 +337,10 @@ function stopGame () {
 	lives = 3;
 	requestAnimationFrame(printScore);
 };
+
+function rand(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // Prints the score
 function printScore () {
@@ -288,63 +366,13 @@ function printScore () {
 
 function startGame () {
 	score = 0;
-	for(let i = 0; i < 3; i++){
+	for(let i = 0; i < 3; i++) {
 		document.getElementById("heart" + String(i+1)).style.visibility = "visible";
 	}
 	document.getElementById("currentScore").innerHTML = score;
 	playButton.textContent = "Stop";
 	isplaying = true;
 	numrounds = 0;
-
-	// LaserInterval
-   /* refreshLaserInterval1 = setInterval(function() {bullet = new game.assets.laser({
-		x: 40,
-		y: Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: 1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true,
-		type: false,
-	});game.objects.push(bullet);bullet.load();}, 1000);
-
-	refreshLaserInterval2 = setInterval(function() {bullet = new game.assets.laser({
-		x: 270,
-		y: Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: -1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true,
-		type: false,
-	});game.objects.push(bullet);bullet.load();}, 1230);
-
-	refreshLaserInterval3 = setInterval(function() {bullet = new game.assets.laser({
-		x: 40,
-		y: 100+Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: 1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true,
-		type: false,
-	});game.objects.push(bullet);bullet.load();}, 1330);
-
-	refreshLaserInterval4 = setInterval(function() {bullet = new game.assets.laser({
-		x: 270,
-		y: 100+Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: -1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true,
-		type: false,
-	});game.objects.push(bullet);bullet.load();}, 1130); */
-	
 
 	game.background = new game.assets.ship({
 		x: 0,
@@ -355,22 +383,6 @@ function startGame () {
 		speed: 0.5,
 		dir: 'v'
 	});
-	
-	/*game.objects.push(new game.assets.warship({
-		x: -100,
-		y: -100,
-		speed: 0.4,
-		type: true,
-		src: './Bilder/warship1.png',
-	}));
-
-	game.objects.push(new game.assets.warship({
-		x: 270,
-		y: -100,
-		speed: 0.4,
-		type: true,
-		src: './Bilder/warship2.png',
-	})); */
 
 	refreshIntervalWarShipLeft = setTimeout(function () {
 		warShipLeft = new game.assets.warship({
@@ -378,8 +390,6 @@ function startGame () {
 			y: -400,
 			speed: 0.4,
 			dir: 'v',
-			width: 14,
-			height: 14,
 			active: true,
 			src: './Bilder/warship1.png',
 		});
@@ -394,8 +404,6 @@ function startGame () {
 			y: -400,
 			speed: 0.4,
 			dir: 'v',
-			width: 14,
-			height: 14,
 			active: true,
 			src: './Bilder/warship2.png',
 		});
@@ -416,58 +424,39 @@ function startGame () {
 }
 
 function createLaser () {
-	refreshLaserInterval1 = setInterval(function () {
-		bullet = new game.assets.laser({
-			x: 40,
-			y: Math.random() * 100,
-			width: 10,
-			height: 3,
-			speed: 1.5,
-			dir: 'h',
-			src: './Bilder/laser.png',
-			active: true,
-		});
-		game.objects.push(bullet);
-		bullet.load();
-		playSound('laser');
-	}, 1000);
-
-	refreshLaserInterval2 = setInterval(function() {bullet = new game.assets.laser({
-		x: 270,
-		y: Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: -1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true
-	});game.objects.push(bullet);bullet.load();playSound('laser');}, 1230);
-
-	refreshLaserInterval3 = setInterval(function() {bullet = new game.assets.laser({
-		x: 40,
-		y: 100+Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: 1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true
-	});game.objects.push(bullet);bullet.load();playSound('laser');}, 1330);
-
-	refreshLaserInterval4 = setInterval(function() {bullet = new game.assets.laser({
-		x: 270,
-		y: 100+Math.random() * 100,
-		width: 10,
-		height: 3,
-		speed: -1.5,
-		dir: 'h',
-		src: './Bilder/laser.png',
-		active: true
-	});game.objects.push(bullet);bullet.load();playSound('laser');}, 1130);
+	// ships shoot for themselves now
 }
 
 
 function update () {
+
+	// detect if we need more enemies
+	if (game.player && game.counter.warships < 2 && numrounds > 1500) {
+		while (game.counter.warships < 2) {
+			const side = Math.random() < 0.5;
+			const warShip = new game.assets.warship({
+				y: -400,
+				speed: 0.4,
+				dir: 'v',
+				active: true,
+				fireFrequency: numrounds/100, // todo: refine this (log scale?)
+				src: './Bilder/warship2.png'
+			});
+			warShip.load();
+
+			// set side after creation
+			if (side) {
+				warShip.x = game.assets.screen.width-warShip.width/2;
+			} else {
+				warShip.x = -warShip.width/2;
+			}
+
+			game.objects.push(warShip);
+			console.log('Created new warship', warShip);
+		}
+		
+	}
+
 	if (game.player) {
 		if (LEFT) {
 			game.player.x = Math.max(0, game.player.x-game.player.speed);
@@ -491,7 +480,7 @@ function update () {
 	game.background.y += game.background.speed;
 	if (game.background.y > 0) {
 		game.background.y = game.background.height/2*-1; // todo: werte anpassen, dass loop gut aussieht
-		console.log('looped background image');
+		// console.log('looped background image');
 	}
 	ctx.drawImage(game.background.img, game.background.x, game.background.y, game.background.width, game.background.height);
 
@@ -500,7 +489,7 @@ function update () {
 		
 		// remove expired effects
 		if (game.objects[i].alive == false) {
-			console.log('removed expired effect');
+			// console.log('removed expired effect');
 			game.objects.splice(i, 1);
 			continue;
 		}
@@ -516,14 +505,16 @@ function update () {
 		if (!intersect(game.assets.screen, game.objects[i])) {
 			// detect out of bounds lasers
 			if (game.objects[i].type == 'laser') {
-				console.log('laser hat den screen verlassen', game.objects.length);
+				// console.log('laser hat den screen verlassen', game.objects.length);
 				game.objects.splice(i, 1);
+				game.counter.lasers -= 1; // decrease laser counter
 				continue;
 			}
 
 			// remove out of bounds warships
 			if (game.objects[i].type == 'warship') {
-				console.log('warship oub', game.objects[i]);
+				// console.log('warship oub', game.objects[i]);
+				game.objects[i].destroy();
 				game.objects.splice(i, 1);
 				continue;
 			}
@@ -677,7 +668,7 @@ function loadImages () {
 
 	Object.entries(game.objects).forEach(function ([key, value]) {
 		game.objects[key].load();
-		console.log('loaded', game.objects[key].src);
+		// console.log('loaded', game.objects[key].src);
 	});
 
 	// game.playerShip.load();
