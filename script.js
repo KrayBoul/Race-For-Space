@@ -192,7 +192,7 @@ game.assets.warship = class extends game.assets.ship {
 					self.shoot();
 				}, rand(0,300));
 			}
-		}, this.fireFrequency*1000, this);
+		}, this.fireFrequency*3000, this);
 	}
 
 	destroy () {
@@ -423,7 +423,7 @@ function startGame () {
 		dir: 'v'
 	});
 
-	refreshIntervalWarShipLeft = setTimeout(function () {
+	/*refreshIntervalWarShipLeft = setTimeout(function () {
 		warShipLeft = new game.assets.warship({
 			x: -100,
 			y: -400,
@@ -435,9 +435,9 @@ function startGame () {
 		warShipLeft.load();
 		game.objects.push(warShipLeft);
 		console.log('Created war ship on the left', warShipLeft);
-	}, 4000);
+	}, 4000); */
 	
-	refreshIntervalWarShipRight = setTimeout(function() {
+	/*refreshIntervalWarShipRight = setTimeout(function() {
 		warShipRight = new game.assets.warship({
 			x: 270,
 			y: -400,
@@ -450,7 +450,7 @@ function startGame () {
 		game.objects.push(warShipRight);
 		console.log('Created war ship on the right', warShipRight);
 	}, 5000);
-
+*/
 	game.player = new game.assets.playerShip({
 		width: 128,
 		height: 256
@@ -466,29 +466,36 @@ function createLaser () {
 	// ships shoot for themselves now
 }
 
+let side = true;
+let counter = 0;
 
 function update () {
-
+	counter++;
 	// detect if we need more enemies
-	if (game.player && game.counter.warships < 2 && numrounds > 1500) {
+	if (game.player && game.counter.warships < 2 && counter > 700) {
+		counter = 0;
 		while (game.counter.warships < 2) {
-			const side = Math.random() < 0.5;
+			//const side = Math.random() < 0.5;
+			let color = side ? './Bilder/warship2.png' : './Bilder/warship1.png';
 			const warShip = new game.assets.warship({
 				y: -400,
 				speed: 0.4,
 				dir: 'v',
 				active: true,
 				fireFrequency: numrounds/100, // todo: refine this (log scale?)
-				src: './Bilder/warship2.png'
+				src: color
 			});
 			warShip.load();
 
 			// set side after creation
 			if (side) {
-				warShip.x = game.assets.screen.width-warShip.width/2;
+			//	warShip.x = game.assets.screen.width-warShip.width/2;
+				warShip.x = -100;
 			} else {
-				warShip.x = -warShip.width/2;
+			//	warShip.x = -warShip.width/2;
+				warShip.x = 270;
 			}
+			side = !side;
 
 			game.objects.push(warShip);
 			console.log('Created new warship', warShip);
