@@ -225,7 +225,7 @@ game.assets.warship = class extends game.assets.ship {
 		// console.log('i/s', this.intersection(game.assets.screen));
 
 		const bullet = new game.assets.laser({
-			x: (this.x > game.assets.screen.width/2) ? this.x : this.x+this.width,
+			x: (this.x > game.assets.screen.width/2) ? this.x-20 : this.x+this.width,
 			// y: Math.floor(Math.random() * (this.y+this.height - this.y + 1) + this.y),
 			y: Math.floor(Math.random() * (intersection.top - intersection.bottom + 1) + intersection.bottom),
 			width: 10,
@@ -424,6 +424,34 @@ function startGame () {
 		dir: 'v'
 	});
 
+	firstShipLeft = new game.assets.warship({
+		x: -100,
+		y: -400,
+		speed: 0.4,
+		dir: 'v',
+		active: true,
+		lasercolor: './Bilder/laser2.png',
+		src: './Bilder/warship1.png',
+	});
+	firstShipLeft.load();
+	game.objects.push(firstShipLeft);
+	console.log('Created war ship on the left', firstShipLeft);
+
+
+	firstShipRight = new game.assets.warship({
+		x: 270,
+		y: -400,
+		speed: 0.4,
+		dir: 'v',
+		active: true,
+		lasercolor: './Bilder/laser.png',
+		src: './Bilder/warship2.png',
+	});
+	firstShipRight.load();
+	game.objects.push(firstShipRight);
+	console.log('Created war ship on the left', firstShipRight);
+
+
 	refreshIntervalWarShipLeft = setInterval(function () {
 		warShipLeft = new game.assets.warship({
 			x: -100,
@@ -613,7 +641,7 @@ function update () {
 	}
 
 	numrounds++;
-	if(numrounds % 100 == 0 && numrounds > 1000) {
+	if(numrounds % 100 == 0 && numrounds > 100) {
 		
 		if (game.player) { // only if player is alive
 			score += 100;
@@ -657,6 +685,28 @@ function detectCollision () {
 				continue;
 			}
 		}
+		/*if (game.objects[i].type == 'laser') {
+			for (let j = 0; j < game.objects.length; j++) {
+				if (game.objects[j].type == 'warship' && intersect(game.objects[i],game.objects[j])){
+					const boom = new game.assets.effect({
+						x: game.objects[i].x,
+						y: game.objects[i].y,
+						width: 20,
+						height: 20,
+						src: './Bilder/explosion.png',
+						speed: 0.2,
+						dir: 'v',
+						active: false,
+						lifetime: 0.8
+					}
+					);
+					boom.load();
+					ctx.drawImage(boom.img.current, boom.x, boom.y, boom.width, boom.height);
+					game.objects.splice(i, 1);
+					console.log('boom');
+				}
+			}
+		}*/
 	}
 }
 
@@ -681,9 +731,9 @@ function die () {
 		const explosion = new game.assets.effect({
 			x: game.player.x,
 			y: game.player.y,
-			width: 31,
-			height: 27,
-			src: './Bilder/fireball.gif',
+			width: 50,
+			height: 45,
+			src: './Bilder/explosion.png',
 			speed: 0.2,
 			dir: 'v',
 			active: false,
