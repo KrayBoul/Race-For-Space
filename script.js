@@ -785,7 +785,7 @@ audio.onpause = function() {
 function playSound (name) {
 	const sound = new Howl({
 		'src': ['./Sounds/'+name+'.mp3'],
-		'volume': 0.2
+		'volume': 0.05
 	});
 	sound.play();
 }
