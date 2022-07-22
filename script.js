@@ -181,6 +181,7 @@ game.assets.warship = class extends game.assets.ship {
 		this.fireFrequency = params?.speed || 0.5;
 		this.fireInterval = null;
 		this.firing = params?.firing || true;
+		this.lasercolor = params?.lasercolor || './Bilder/laser.png';
 
 		console.log('created warship', this);
 		super.load();
@@ -231,7 +232,8 @@ game.assets.warship = class extends game.assets.ship {
 			height: 3,
 			speed: (this.x > game.assets.screen.width/2) ? -1.5 : 1.5,
 			dir: 'h',
-			src: './Bilder/laser.png',
+			//src: './Bilder/laser.png',
+			src: this.lasercolor,
 			active: true
 		});
 		// console.log('warship shot', bullet.speed);
@@ -394,9 +396,8 @@ function printScore () {
 	clearInterval(refreshLaserInterval2);
 	clearInterval(refreshLaserInterval3);
 	clearInterval(refreshLaserInterval4);
-	clearTimeout(refreshIntervalWarShipLeft);
-	clearTimeout(refreshIntervalWarShipRight);
-	clearTimeout(refreshTimeout);
+	clearInterval(refreshIntervalWarShipLeft); //exchange ito SetTimeout if there are more diffrent types of ships
+	clearInterval(refreshIntervalWarShipRight); //exchange ito SetTimeout if there are more diffrent types of ships
 	
 }
 
@@ -423,6 +424,38 @@ function startGame () {
 		dir: 'v'
 	});
 
+	refreshIntervalWarShipLeft = setInterval(function () {
+		warShipLeft = new game.assets.warship({
+			x: -100,
+			y: -400,
+			speed: 0.4,
+			dir: 'v',
+			active: true,
+			lasercolor: './Bilder/laser2.png',
+			src: './Bilder/warship1.png',
+		});
+		warShipLeft.load();
+		game.objects.push(warShipLeft);
+		console.log('Created war ship on the left', warShipLeft);
+	}, 18000);
+	
+	refreshIntervalWarShipRight = setInterval(function() {
+		warShipRight = new game.assets.warship({
+			x: 270,
+			y: -400,
+			speed: 0.4,
+			dir: 'v',
+			active: true,
+			lasercolor: './Bilder/laser.png',
+			src: './Bilder/warship2.png',
+		});
+		warShipRight.load();
+		game.objects.push(warShipRight);
+		console.log('Created war ship on the right', warShipRight);
+	}, 18000);
+
+	// in case if there are more diffrent warships in future --> SetTimeout and delete SetInterval Waships
+
 	/*refreshIntervalWarShipLeft = setTimeout(function () {
 		warShipLeft = new game.assets.warship({
 			x: -100,
@@ -435,9 +468,9 @@ function startGame () {
 		warShipLeft.load();
 		game.objects.push(warShipLeft);
 		console.log('Created war ship on the left', warShipLeft);
-	}, 4000); */
+	}, 4000);
 	
-	/*refreshIntervalWarShipRight = setTimeout(function() {
+	refreshIntervalWarShipRight = setTimeout(function() {
 		warShipRight = new game.assets.warship({
 			x: 270,
 			y: -400,
@@ -449,31 +482,25 @@ function startGame () {
 		warShipRight.load();
 		game.objects.push(warShipRight);
 		console.log('Created war ship on the right', warShipRight);
-	}, 5000);
-*/
+	}, 5000);*/
+
 	game.player = new game.assets.playerShip({
 		width: 128,
 		height: 256
 	});
 
-	refreshTimeout = setTimeout(createLaser, 4000);
-
 	loadImages();
 	draw();
 }
 
-function createLaser () {
-	// ships shoot for themselves now
-}
-
 let side = true;
-let counter = 0;
+
 
 function update () {
-	counter++;
-	// detect if we need more enemies
-	if (game.player && game.counter.warships < 2 && counter > 700) {
-		counter = 0;
+
+	// Placeholder for future mechanic handeling more enemy ships. To be continued...
+
+	/*if (game.player) {
 		while (game.counter.warships < 2) {
 			//const side = Math.random() < 0.5;
 			let color = side ? './Bilder/warship2.png' : './Bilder/warship1.png';
@@ -485,6 +512,7 @@ function update () {
 				fireFrequency: numrounds/100, // todo: refine this (log scale?)
 				src: color
 			});
+
 			warShip.load();
 
 			// set side after creation
@@ -501,7 +529,7 @@ function update () {
 			console.log('Created new warship', warShip);
 		}
 		
-	}
+	}*/
 
 	if (game.player) {
 		game.player.img.current = game.player.img['default'];
