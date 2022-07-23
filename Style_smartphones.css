@@ -72,7 +72,7 @@ canvas {
     margin-top: 20px;
     width: min(100%, 600px);
     display: grid;
-    grid-template-rows: 80px 80px 80px; 
+    grid-template-rows: 50px 50px 50px; 
     grid-template-columns: 1fr 1fr 1fr; 
 }
 
