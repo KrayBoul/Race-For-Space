@@ -101,3 +101,7 @@ h2 {
     width: min(100%, 960px);
     margin:auto;
 }
+
+.directional-pad {
+    display: none;
+}
