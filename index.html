@@ -6,17 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Race for Space - Online Game</title>
     <link rel="stylesheet" href="Style.css"/>
+    <link rel="stylesheet" media="screen and (max-width: 600px)" href="Style_smartphones.css" />
       
 </head>
 <body onload="startScreen()">
 
     <img class="banner" src="Bilder/banner.png"/>
-
-    <div class="lives">
-        <img src="./Bilder/heart.png" width="20" height="20" id="heart1"></img>
-        <img src="./Bilder/heart.png" width="20" height="20" id="heart2"></img>
-        <img src="./Bilder/heart.png" width="20" height="20" id="heart3"></img>
-    </div>
 
     <div class="container">
 
@@ -24,20 +19,22 @@
             <canvas id="canvas" width="320" height="200"></canvas>
         </div>
 
-
         <div class="button-start">
             <button onClick="startButtonPress()" id="start">Start</button>
             <button onClick="togglePlay()">Music</button>
         </div>
-        <div class="button-music">
-            
+
+        <div class="lives">
+            <img src="./Bilder/heart.png" width="20" height="20" id="heart1"></img>
+            <img src="./Bilder/heart.png" width="20" height="20" id="heart2"></img>
+            <img src="./Bilder/heart.png" width="20" height="20" id="heart3"></img>
         </div>
+        
         <div class="score">
             <h2>Score</h2>
             <h2 id="currentScore">0</h2> 
         </div>
-
-         
+   
     </div>
 
     

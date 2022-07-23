@@ -14,13 +14,13 @@ html {
 .banner {
 	display: flex;
     align-items: flex-start;
-    width: min(100%, 960px);
+    width: min(100%, 600px);
     margin:auto;
 }
 
 .container {
     display: grid;
-    grid-template-columns: 5fr 1fr;
+    grid-template-columns:1fr;
     grid-gap: 10px;
     justify-items: stretch;
     align-items: stretch;
@@ -35,8 +35,8 @@ html {
 }
 
 .game {
-    grid-column: 1 / 2;
-    grid-row: 2 / 5;
+    grid-column: 1 / 5;
+    grid-row: 2;
 }
 
 canvas {
@@ -49,19 +49,25 @@ canvas {
     image-rendering: pixelated;
 }
 
-.button-start {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-}
-
 .score {
-    grid-column: 2 / 3;
-    grid-row-start: 4;
+    grid-column: 2;
+    grid-row: 1;
     text-align: center;
     width: 100%;
     border: 6px groove #00FF01;
     border-radius: 2rem;
     background-color:#2550a1;
+}
+
+.button-start {
+    display: flex;
+    grid-column: 3 / 5;
+    grid-row: 1;
+}
+
+.lives {
+    grid-column: 1;
+    grid-row: 1;
 }
 
 button {
@@ -70,10 +76,11 @@ button {
     color: rgb(0, 0, 0);
     text-align: center;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 10px;
     border-radius: 50%;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    /*aspect-ratio: 1 / 1;*/
+    flex-direction: row;
     
     cursor: pointer;
     box-shadow: 2px 3px rgb(0, 65, 16);
@@ -91,13 +98,6 @@ button:active {
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 10px;
     font-family: 'Press Start 2P', "Gill Sans", "Gill Sans MT", "Myriad Pro", Helvetica, Arial, sans-serif;
-}
-
-.lives {
-    grid-column: 1;
-    grid-row: 1;
-    width: min(100%, 960px);
-    margin:auto;
 }
