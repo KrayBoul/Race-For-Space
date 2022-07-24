@@ -110,6 +110,11 @@ canvas {
     grid-row: 1;
 }
 
+.heart {
+    height: 35px;
+    width: 35px;
+}
+
 button {
     background-color: #00FF01; /*  evtll. button image background-image: url("./Bilder/start.png"); */
     border: none;

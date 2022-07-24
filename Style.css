@@ -102,6 +102,11 @@ h2 {
     margin:auto;
 }
 
+.heart {
+    height: 35px;
+    width: 35px;
+}
+
 .directional-pad {
     display: none;
 }
