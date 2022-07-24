@@ -1,19 +1,35 @@
-/*
-Fortschritte
-- Score wird mitgezählt
-- Lasergeschosse werden abgeschossen und random neu generiert.
-- Kollosion funktioniert bei Player mit Laser und Warship.
-- 3 Leben eingefügt.
 
 
-Probleme
-JAVASCRIPT
-- Die Laserstrahlen sollen mit den (gegnerischen) Warships kollodieren und explodieren. (explode.png)
-- Grafiken sind wieder pixelig??? Stichwort "pixelated"
+// Event listener for touch events
+var touchelems = document.getElementsByClassName('arrowbutton');
+for(var i = 0; i < touchelems.length; i++) {
+    touchelems[i].addEventListener('touchstart', handleTouch, true);
+	touchelems[i].addEventListener('touchend', handleTouch, true);
+	//touchelems[i].addEventListener('touchmove', handleTouch, true);
+	console.log(touchelems[i]);
+}
 
-HTML/CSS
-- Wie kann ich eine nicht standardmäßige Font verwenden? Ich hätte gerne "Press Start 2P" font; https://fonts.google.com/specimen/Press+Start+2P probiert.
-*/
+function handleTouch(evt) {
+	//var touch = evt.changedTouches[0];
+  	var keyev;
+	//var touches = evt.touches;
+	//console.log(evt.srcElement.id);
+	switch(evt.srcElement.id) {
+		case "buttonup": keyev = 38; break;
+		case "buttonleft": keyev = 37; break;
+		case "buttondown": keyev = 40; break;
+		case "buttonright": keyev = 39; break;
+		default: return;
+	}
+	console.log(keyev);
+	switch(evt.type) {
+    	case "touchstart": window.dispatchEvent(new KeyboardEvent('keydown', {'keyCode': keyev})); break;  
+    	case "touchend": window.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': keyev})); break;
+		//case "touchmove": window.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': keyev})); break;
+    	default: return;
+  	}
+	evt.preventDefault();
+}
 
 let score = 0;
 let numrounds = 0;
